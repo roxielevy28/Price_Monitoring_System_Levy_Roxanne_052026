@@ -2,28 +2,16 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 
-# ✅ Good start! You've imported the libraries and fetched the page.
-# TIP: Instead of printing the whole soup, try using your browser's "Inspect Element"
-#   on the book page to see the HTML structure. Look at the class names carefully.
-
 page = requests.get('https://books.toscrape.com/catalogue/set-me-free_988/index.html')
 soup = BeautifulSoup (page.content, 'html.parser')
-# print(soup)  # ← You can comment this out once you know the structure
+# print(soup)
 
-# ❓ HINT: The id "default" wraps the whole page content. That's fine as a starting
-#   point, but you can also search directly for the elements you need from `soup`.
 product = soup.find(id="default")
 # print(product)
 
-# ✅ You found the right class for the product info section!
 items = product.find_all(class_= 'col-sm-6 product_main')
 # print(items)
 
-# ⚠️ SYNTAX: Missing closing `)` on both lines below — Python will throw an error.
-#   Every opening `(` needs a matching `)`.
-# ❓ HINT: `find()` returns the *element*. To get the text inside it, you need
-#   to use `.text` or `.get_text()` on the result. Try printing the element first,
-#   then figure out how to extract just the text.
 Book_Title=(items[0].find('h1').get_text())
 # print(Book_Title)
 
@@ -35,20 +23,10 @@ rates={"One": "1", "Two": "2", "Three": "3", "Four": "4", "Five": "5"}
 review_rating= rates[book_rating]
 # print(review_rating)
 
-# ⚠️ SYNTAX: Missing closing `]` on both lines — brackets must match parentheses.
-# ❓ HINT: The star-rating is stored in the class name itself (e.g. "star-rating Five").
-#   The number of stars is the *second class* on that `<p>` tag. Think about how
-#   to read the class attribute from the element to get the word "Five", then
-#   convert that word to a number.
-items_1[0] = product.find_all(class_= 'carousel')
+items_1[0] = product.find(class_= 'carousel')
 Image_URL=(items_1[0].find('img') ['src'])
 print(Image_URL)
 
-# ✅ You found the right table! It has all the price/UPC info you need.
-# ❓ HINT: The table has rows (`<tr>`) with headers (`<th>`) and data (`<td>`).
-#   Each row is a key-value pair. For example, the row with "Price (excl. tax)"
-#   in the `<th>` has the actual price in the `<td>` next to it.
-#   Try: loop through all `<tr>` elements and print each `<th>` and `<td>` pair.
 items_2[0] = product.find_all(class_= 'table table-striped')
 
 # ⚠️ SYNTAX: `items[2]` should probably be `items_2[0]` — check your variable names.
