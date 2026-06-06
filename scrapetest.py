@@ -40,6 +40,9 @@ review_rating= rates[book_rating]
 #   The number of stars is the *second class* on that `<p>` tag. Think about how
 #   to read the class attribute from the element to get the word "Five", then
 #   convert that word to a number.
+items_1[0] = product.find_all(class_= 'carousel')
+Image_URL=(items1[0].find('img') [src]')
+print(Image_URL)
 
 # ✅ You found the right table! It has all the price/UPC info you need.
 # ❓ HINT: The table has rows (`<tr>`) with headers (`<th>`) and data (`<td>`).
