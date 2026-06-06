@@ -39,6 +39,7 @@ print(product_description)
 info_table = soup.find('table', class_='table-striped')
 Table_Data= {}
 for row in info_table.find_all('tr'):
+
 header = row.find('th').text.strip()
 value = row.find('td').text.strip()
 Table_Data[header] = value
