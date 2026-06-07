@@ -54,17 +54,17 @@ product_page_url = ('https://books.toscrape.com/catalogue/set-me-free_988/index.
 
 Book_Report = pd.DataFrame(
     {
-        'product_page_url': product_page_url,
-        'universal_product_code': universal_product_code,
-        'Book_Title': Book_Title,
-        'price_including_tax': price_including_tax,
-        'price_excluding_tax': price_excluding_tax,
-        'quantity_available': quantity_available,
-        'product_description': product_description,
-        'category': category,
-        'review_rating': review_rating,
-        'image_url': Image_URL,
+        'product_page_url': [product_page_url],
+        'universal_product_code': [universal_product_code],
+        'Book_Title': [Book_Title],
+        'price_including_tax': [price_including_tax],
+        'price_excluding_tax': [price_excluding_tax],
+        'quantity_available': [quantity_available],
+        'product_description': [product_description],
+        'category': [category],
+        'review_rating': [review_rating],
+        'image_url': [Image_URL],
     })
 
 print(Book_Report)
-Book_Report.to_csv(Book_Report.csv)
+Book_Report.to_csv('Book_Report.csv')
