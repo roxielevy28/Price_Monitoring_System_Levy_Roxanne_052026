@@ -1,3 +1,4 @@
+from urllib.parse import urljoin
 import pandas as pd
 import requests
 from bs4 import BeautifulSoup
@@ -22,7 +23,7 @@ Book_Title=(items[0].find('h1').get_text())
 
 # ✅ Availability text extracted. TIP: the text has extra whitespace/newlines.
 #   Consider using .strip() to clean it up.
-quantity_available=(items[0].find(class_= 'instock availability').get_text())
+quantity_available=(items[0].find(class_= 'instock availability').text.strip())
 
 # ✅ Clever approach! Reading the class attribute to get "Five", then mapping to "5"
 Book_rating=items[0].find(class_='star-rating')['class'][1]
@@ -33,8 +34,8 @@ review_rating= rates[Book_rating]
 #   You may want to convert it to an absolute URL. Think about joining it with
 #   the base URL: "https://books.toscrape.com/catalogue/"
 items[0] = product.find(class_= 'carousel')
-Image_URL=(items[0].find('img') ['src'])
-
+Image=(items[0].find('img') ['src'])
+Image_URL= urljoin("https://books.toscrape.com/catalogue/", Image)
 # ⚠️ BUG: This only works for THIS specific book (hardcoded href).
 #   What if you scrape a different book? The category href will be different.
 #   TIP: The breadcrumb has the structure Home > Books > Category.
@@ -42,7 +43,7 @@ Image_URL=(items[0].find('img') ['src'])
 #   from the breadcrumb list (index [2]), or get the text of the last <a>
 #   before the active <li>.
 items[0] = product.find(class_= 'breadcrumb')
-category=items[0].find(href='../category/books/young-adult_21/index.html') ['href'] [18:29]
+category=items[0].find_all('a')[2].text.strip()
 
 # ✅ Product description extracted. Good use of find_next('p')!
 #   (In the other file you used .find('p') which didn't work — this is correct.)
