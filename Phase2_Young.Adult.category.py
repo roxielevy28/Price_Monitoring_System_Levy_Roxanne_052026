@@ -15,8 +15,11 @@ books_on_page= soup.find_all(class_= 'col-xs-6 col-sm-4 col-md-3 col-lg-3')
 for book_element in books_on_page:
     link = book_element.find('h3').find('a')['href']
     complete_url = urljoin(category_url, link)
-    book_data = scrape_one_book(complete_url)
-     # this works now. i got all the links on the first page
+    print(full_url)
+  # this works now. i got all the links on the first page
+
+    # you recommend call your book-scraper howver i dont understand were the "scrape_one book" came from for this- book_data = scrape_one_book(complete_url). im not sure if i deleted one of my old files that was used for this variable. 
+    
 
 next_button = soup.find(class_='next')
 if next_button:
