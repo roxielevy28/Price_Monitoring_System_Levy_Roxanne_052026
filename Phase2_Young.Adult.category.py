@@ -15,8 +15,7 @@ books_on_page= soup.find_all(class_= 'col-xs-6 col-sm-4 col-md-3 col-lg-3')
 for book_element in books_on_page:
     link = book_element.find('h3').find('a')['href']
     complete_url = urljoin(category_url, link)
-    print(complete_url) 
-    url_for_all_books_in_category.append(complete_url)
+    book_data = scrape_one_book(complete_url)
      # this works now. i got all the links on the first page
 
 next_button = soup.find(class_='next')

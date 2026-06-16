@@ -3,7 +3,7 @@
 Hey! I've looked through your work and here's everything I think you should tackle next. Some are quick fixes, some are bigger challenges — take them in order.
 
 ---
-
+* All this details from line 6 to 18 were addressed
 ## 1. Fix `urljoin('url', ...)` (Phase2 file) 🔴
 
 On line 17 of `Phase2_Young.Adult.category.py`, you wrote:
@@ -16,10 +16,11 @@ The first argument is the literal string `"url"`, not your variable `url`. That 
 
 ```python
 Actual_book_link = urljoin(url, raw_book_link)
-```
+* All this details from line 6 to 18 were addressed
+
 
 ## 2. Loop through ALL books on the page, not just the first one (Phase2 file) 🟡
-
+* Line 24 to 30 were addressed
 You're only grabbing `books_on_page[0]`. You already have a list of every book on the page — now loop over them! Something like:
 
 ```python
@@ -28,14 +29,16 @@ for book_element in books_on_page:
     full_url = urljoin(url, link)
     print(full_url)
 ```
+* Line 24 to 30 were addressed
 
+* i chnage from print to -book_data = scrape_one_book(full_url)
 Once that's working, take it further — instead of printing, call your book-scraper:
 
 ```python
 book_data = scrape_one_book(full_url)
 ```
 
-## 3. Fix the pagination loop (Phase2 file) 🟡
+* I address the pagination ## 3. Fix the pagination loop (Phase2 file) 🟡
 
 A couple of things here:
 
@@ -77,9 +80,9 @@ master_report = pd.DataFrame(all_books)
 master_report.to_csv('all_books.csv', index=False)
 ```
 
-## 6. Fix inconsistent naming 🟢
+* I address this ## 6. Fix inconsistent naming 🟢
 
-You're mixing styles:
+* I made this update- You're mixing styles:
 
 | ✅ Good (snake_case) | 🔄 Needs changing |
 |---|---|
@@ -87,22 +90,22 @@ You're mixing styles:
 | `Table_Data` | `Image_URL` → `image_url` |
 | | `Book_Report` → `book_report` |
 
-Python convention is `snake_case` — pick it and stick with it. Not critical, but it'll help when your scripts get bigger.
+* I addressed this- Python convention is `snake_case` — pick it and stick with it. Not critical, but it'll help when your scripts get bigger.
 
-## 7. Rename `import requests.py` 🟡
+* I deleted this since this was a duplicate-## 7. Rename `import requests.py` 🟡
 
-This filename conflicts with the `requests` library itself. When you write `import requests` in another file, Python might get confused and try to import *this file* instead of the real library. Rename it to something like `book_scraper_v1.py`.
+* this file was a duplicate so i deleted this-This filename conflicts with the `requests` library itself. When you write `import requests` in another file, Python might get confused and try to import *this file* instead of the real library. Rename it to something like `book_scraper_v1.py`.
 
-## 8. Clean up `new_file.py` 🟢
+* I deleted this- ## 8. Clean up `new_file.py` 🟢
 
-This file just contains `'pip install pandas'` — looks like a note-to-self that got saved as a .py file. You can delete it.
+* I deleted this- This file just contains `'pip install pandas'` — looks like a note-to-self that got saved as a .py file. You can delete it.
 
-## 9. Store shared URLs in one place 🟢
+* did this- ## 9. Store shared URLs in one place 🟢
 
-You're using `"https://books.toscrape.com/catalogue/"` in multiple places across multiple files. If the site ever changes, you'd need to hunt down every occurrence. Store it in one variable:
+* did this- You're using `"https://books.toscrape.com/catalogue/"` in multiple places across multiple files. If the site ever changes, you'd need to hunt down every occurrence. Store it in one variable:
 
 ```python
-BASE_URL = "https://books.toscrape.com/catalogue/"
+* did this- BASE_URL = "https://books.toscrape.com/catalogue/"
 ```
 
 ---
