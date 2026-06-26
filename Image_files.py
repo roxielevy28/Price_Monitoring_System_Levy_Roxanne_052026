@@ -2,7 +2,7 @@ from urllib.parse import urljoin
 import os
 import requests
 from bs4 import BeautifulSoup
-
+from scrapetest import scrape_one_book
 def clean_filename(name):
     return "".join(c if c.isalnum() else "_" for c in name.lower())
 
@@ -44,23 +44,40 @@ def get_all_book_links(cat_url):
     return all_book_urls
 
 def download_image(image_url, category_type, book_title):
-    name_of_folder = clean_filename(category_type)
-    os.makedirs(name_of_folder, exist_ok=True)
+    # Normalize category_type to a string (some scrapers return a list)
+    if isinstance(category_type, (list, tuple)):
+        category_str = category_type[0] if category_type else "unknown"
+    else:
+        category_str = category_type or "unknown"
 
-    response = requests.get(image_url, stream=True)
+    name_of_folder = clean_filename(category_str)
+    # Normalize book_title to string
+    if isinstance(book_title, (list, tuple)):
+        book_title_str = book_title[0] if book_title else "untitled"
+    else:
+        book_title_str = book_title or "untitled"
+
+    file_name = clean_filename(book_title_str)
+    folder_path = os.path.join("images", name_of_folder)
+    image_path = os.path.join(name_of_folder, file_name)
+    response = requests.get(image_url)
     if response.status_code != 200:
         return None
 
-    _, ext = os.path.splitext(image_url)
-    if not ext:
-        ext = '.jpg'
-
-    filename = f"{clean_filename(book_title)}{ext}"
-    file_path = os.path.join(name_of_folder, filename)
-
-    with open(file_path, 'wb') as f:
-        for chunk in response.iter_content(1024):
-            f.write(chunk)
-
-    return file_path
+    with open(image_path, "wb") as file:
+        file.write(response.content)
+    return image_path
+all_categories = get_all_category_links()
+for category in all_categories:
+    category_type = category["name"]
+    cat_url = category["url"]
+    print(f"Downloading images from: {category_type}")
+    book_links = get_all_book_links(cat_url)
+    for book_url in book_links:
+        book_data = scrape_one_book(book_url)
+        download_image(
+            book_data["image_url"],
+            book_data["category"],
+            book_data["book_title"]
+        )
 print("All book images")
