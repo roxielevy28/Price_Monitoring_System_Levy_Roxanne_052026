@@ -59,7 +59,18 @@ def download_image(image_url, category_type, book_title):
 
     file_name = clean_filename(book_title_str)
     folder_path = os.path.join("images", name_of_folder)
-    image_path = os.path.join(name_of_folder, file_name)
+    os.makedirs(folder_path, exist_ok=True)
+
+    # Normalize image_url if it's a list/tuple
+    if isinstance(image_url, (list, tuple)):
+        image_url = image_url[0] if image_url else ""
+
+    # Preserve extension if present
+    _, ext = os.path.splitext(image_url)
+    if not ext:
+        ext = ".jpg"
+    image_path = os.path.join(folder_path, f"{file_name}{ext}")
+
     response = requests.get(image_url)
     if response.status_code != 200:
         return None
