@@ -4,22 +4,6 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-
-# =============================================================================
-# 🟡 ISSUE #2 — quantity_available stores extra text
-# =============================================================================
-# Harold: (2026-06-28, Milestone 2) Currently quantity_available contains
-# "In stock (19 available)" — a full sentence. If you ever want to analyze
-# stock numerically (e.g., "which books have < 5 in stock?"), this won't work.
-#
-# ✅ FIX: Add `import re` at the top, then change the extraction to:
-#
-#        raw_quantity = items[0].find(class_='instock availability').text.strip()
-#        quantity_available = int(re.search(r'\d+', raw_quantity).group())
-#
-# 🎯 WHY: Numbers can be sorted and compared. Strings like
-#    "In stock (19 available)" cannot be used in math/filtering operations.
-
 # =============================================================================
 # 🟡 ISSUE #3 — Product descriptions appear duplicated
 # =============================================================================
@@ -38,18 +22,7 @@ from bs4 import BeautifulSoup
 #
 # 🎯 WHY: Duplicated text inflates file size and corrupts text analysis.
 
-# 🎯 MILESTONE 3 — Next step: Turn this single-book script into a REUSABLE
-#   FUNCTION that you can call for any book URL. Think of it like a template:
-#
-#       def scrape_one_book(url):  ******* i made these changes*******
-#           page = requests.get(url)
-#           ... extract all 10 fields ...
-#           return { ... dictionary of results ... }
-#
-#   Then your Phase2 file can call this function for EVERY book it finds.
-#   That's how you scale from 1 book → 1000 books without rewriting anything!
 
-# Roxanne: i removed the base url and the category url? should i have kept those or not since im making a resusable ink
 def scrape_one_book(url):
     page = requests.get(url)
     soup = BeautifulSoup (page.content, 'html.parser')
@@ -58,7 +31,9 @@ def scrape_one_book(url):
     items = product.find_all(class_= 'col-sm-6 product_main')
 
     book_title=(items[0].find('h1').get_text())
-    quantity_available=(items[0].find(class_= 'instock availability').text.strip())
+
+    raw_quantity = items[0].find(class_='instock availability').text.strip()
+    quantity_available = int(re.search(r'\d+', raw_quantity).group())
 
     book_rating=items[0].find(class_='star-rating')['class'][1]
     rates={"One": "1", "Two": "2", "Three": "3", "Four": "4", "Five": "5"}
