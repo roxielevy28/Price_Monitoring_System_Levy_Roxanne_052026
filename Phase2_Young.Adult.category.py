@@ -1,20 +1,9 @@
 from urllib.parse import urljoin
-# Harold: (Milestone 3) Added below import — needed to build and export a DataFrame from all scraped books
 import pandas as pd
 import os
 import requests
 from bs4 import BeautifulSoup
 from scrapetest import scrape_one_book
-
-# =============================================================================
-# 🔴 ISSUE #2 — NO ERROR HANDLING: One bad book crashes the whole script
-# =============================================================================
-# Harold: (2026-06-28, Milestone 3) Right now, if scrape_one_book() fails on
-# even ONE book (network timeout, missing HTML element, etc.), the entire script
-# crashes and you lose ALL the books you already scraped.
-#
-# ✅ FIX: Wrap each scrape call in try/except so one failure doesn't stop
-#    the whole loop. See the example further down in this file.
 
 category_url = "https://books.toscrape.com/catalogue/category/books/young-adult_21/index.html"
 
@@ -42,31 +31,21 @@ for url in url_for_all_books_in_category:
         print(f"  ⚠️ Skipped {url}: {e}")
         continue
 
-# Harold: (Milestone 3, Step 2) NOW loop through remaining pages using pagination
-# 'while True' keeps going until we run out of 'next' buttons
-# Harold: (2026-06-28, Milestone 3) ✅ The pagination logic itself is CORRECT —
-# it checks for a 'next' button and stops when there isn't one. Good work!
-# But the same error-handling issue from Step 1 applies here too.
 while True:
     next_button = soup.find(class_='next')
     if not next_button:
-        # Harold: No 'next' button means we've hit the last page — time to stop
         break
     
-    # Harold: Build the URL for the next page (e.g., page-2.html, page-3.html, etc.)
     next_page = next_button.find("a")["href"]
     category_url = urljoin(category_url, next_page)
     
-    # Harold: Fetch and parse THAT next page
     page = requests.get(category_url)
     soup = BeautifulSoup(page.text, 'html.parser')
     
-    # Harold: Extract all book links from this new page, same as we did for page 1
     books_on_page = soup.find_all(class_='col-xs-6 col-sm-4 col-md-3 col-lg-3')
     for book_element in books_on_page:
         link = book_element.find('h3').find('a')['href']
         complete_url = urljoin(category_url, link)
-        # Harold: Scrape each book and add it to the SAME master list (all_books keeps growing)
         book_data = scrape_one_book(complete_url)
         all_books.append(book_data)
 
@@ -87,7 +66,7 @@ while True:
 # Harold: (Milestone 3, Step 3) Export everything to ONE CSV — all books from every page in this category
 master_report = pd.DataFrame(all_books)
 os.makedirs('csv_reports', exist_ok=True)
-master_report.to_csv('csv_reports/all_books.csv', index=False)
+master_report.to_csv('csv_reports/young_adult.csv', index=False)
 
 
 # 2. The `url_for_all_books_in_category` list is built but only used in the
@@ -99,25 +78,6 @@ master_report.to_csv('csv_reports/all_books.csv', index=False)
 #        print(f"✅ Saved {len(all_books)} books to young_adult.csv")
 #    This way you see in the terminal that it worked.
 
-# =============================================================================
-# 🟡 ISSUE #6 — CSV FILES SCATTERED IN ROOT FOLDER: Use a subfolder
-# =============================================================================
-# Harold: (2026-06-28, Milestone 3 → connects to Milestone 4) Right now all
-# your CSV files (young_adult.csv, mystery.csv, etc.) are saved directly in
-# the project root folder, mixed in with your .py files. With 50+ CSVs this
-# gets messy fast.
-#
-# ✅ FIX: Save all CSVs into a dedicated folder like `csv_reports/`.
-#    You need to make TWO changes:
-#
-#    CHANGE 1 — At the top of this file, add:
-#        import os
-#
-#    CHANGE 2 — Before the to_csv line, add:
-#        os.makedirs('csv_reports', exist_ok=True)
-#
-#    CHANGE 3 — Update the filename path:
-#        master_report.to_csv('csv_reports/young_adult.csv', index=False)
 #
 #    🎯 SAME FIX NEEDED IN All_Category.py:
 #        os.makedirs('csv_reports', exist_ok=True)
@@ -139,7 +99,7 @@ master_report.to_csv('csv_reports/all_books.csv', index=False)
 # ├─────┼──────────────────────────────┼─────────────────────┼──────────┤
 │  1  │ List-wrapped CSV values      │ scrapetest.py       │ done  │
 │  2  │ No error handling            │ Phase2 + All_Cat    │ ❌ TODO  │
-│  3  │ Generic 'all_books.csv' name │ Phase2_Young...py   │ ❌ TODO  │
+│  3  │ Generic 'all_books.csv' name │ Phase2_Young...py   │ done  │
 │  4  │ quantity_available is string │ scrapetest.py       │ done  │
 │  5  │ Duplicated descriptions      │ scrapetest.py       │ done  │
 │  6  │ CSVs scattered in root       │ Phase2 + All_Cat    │ ❌ TODO  │
