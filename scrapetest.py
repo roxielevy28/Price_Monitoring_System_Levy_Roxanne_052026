@@ -4,25 +4,6 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-# =============================================================================
-# 🟡 ISSUE #3 — Product descriptions appear duplicated
-# =============================================================================
-# Harold: (2026-06-28, Milestone 2) In the CSV output, descriptions show the
-# same paragraph twice. The current code does:
-#
-#        items[0] = product.find(class_='sub-header')
-#        product_description = items[0].find_next('p').text.strip()
-#
-# The find_next('p') might be picking up a description that already contains
-# both the truncated "..." version AND the full version concatenated.
-#
-# ✅ FIX: Investigate the HTML structure. Try using find_all('p') and taking
-#    just the first <p> after the sub-header, or use a more specific CSS
-#    selector to target only the description paragraph.
-#
-# 🎯 WHY: Duplicated text inflates file size and corrupts text analysis.
-
-
 def scrape_one_book(url):
     page = requests.get(url)
     soup = BeautifulSoup (page.content, 'html.parser')
@@ -46,8 +27,8 @@ def scrape_one_book(url):
     items[0] = product.find(class_= 'breadcrumb')
     category=items[0].find_all('a')[2].text.strip()
 
-    items[0] = product.find(class_= 'sub-header')
-    product_description=(items[0].find_next('p').text.strip())
+    description_block = product.select_one('#product_description + p')
+    product_description = description_block.get_text(' ', strip=True) if description_block else ''
 
     info_table = product.find('table', class_='table-striped')
     table_data = {}
