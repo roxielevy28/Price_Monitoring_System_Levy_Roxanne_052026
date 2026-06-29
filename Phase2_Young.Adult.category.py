@@ -56,9 +56,12 @@ all_books = []
 # 🎯 WHY: With 30+ books in this category, even a 5% failure rate means you'd
 #    lose 1-2 books silently — or worse, crash before saving anything.
 for url in url_for_all_books_in_category:
-    # Harold: (connects to Milestone 2) Calling the reusable function — pass it one URL, get back a dictionary of all 10 fields
-    book_data = scrape_one_book(url)
-    all_books.append(book_data)
+    try:
+        book_data = scrape_one_book(url)
+        all_books.append(book_data)
+    except Exception as e:
+        print(f"  ⚠️ Skipped {url}: {e}")
+        continue
 
 # Harold: (Milestone 3, Step 2) NOW loop through remaining pages using pagination
 # 'while True' keeps going until we run out of 'next' buttons
