@@ -42,8 +42,8 @@ for category in category_links[1:]:
                 all_book_urls.append(full_url)
 
             next_button = soup.find(class_="next")
-            if not next_button:
-                break
+            if not next_button:     
+                break        
 
             next_page = next_button.find("a")["href"]
             current_url = urljoin(current_url, next_page)
