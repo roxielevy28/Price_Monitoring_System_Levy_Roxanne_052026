@@ -83,10 +83,14 @@ for category in all_categories[1:]:
     
     book_links = get_all_book_links(cat_url)
     for book_url in book_links:
-           try:
-              book_data = scrape_one_book(book_url)
-              download_image(...)
-           except Exception as e:
-                print(f"  ⚠️ Skipped {book_url}: {e}")
-                continue
+        try:
+            book_data = scrape_one_book(book_url)
+            download_image(
+                book_data.get("image_url"),
+                book_data.get("category"),
+                book_data.get("book_title")
+            )
+        except Exception as e:
+            print(f"  ⚠️ Skipped {book_url}: {e}")
+            continue
 
