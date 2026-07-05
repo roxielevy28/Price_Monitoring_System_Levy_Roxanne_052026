@@ -35,10 +35,10 @@ The repository contains the application code, setup files, and documentation.
 
 Repo: Levy_Roxanne_Price_Monitoring_System_052026/
 Content of Repo
-    README.md
-    requirements.txt
-    .gitignore
-    scrapetest.py
-    Phase2_Young.Adult.category.py
-    All_category.py
-    Image_files.py
+ README.md
+ requirements.txt
+ .gitignore
+ scrapetest.py
+ Phase2_Young.Adult.category.py
+ All_category.py
+ Image_files.py
